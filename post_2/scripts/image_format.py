@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageOps
 from os import scandir, path, mkdir
 import os
 
@@ -11,6 +11,10 @@ INPUT_DIR_B = path.join(DATA_DIR, 'model_input_b')
 def resize_image(image_path, new_path, new_size=NEW_SIZE):
     image = Image.open(image_path)
     image.thumbnail(new_size)
+    delta_w = new_size[0] - image.size[0]
+    delta_h = new_size[1] - image.size[1]
+    padding = (delta_w//2, delta_h//2, delta_w-(delta_w//2), delta_h-(delta_h//2))
+    image = ImageOps.expand(image, padding)
     image.save(new_path)
 
 if not path.exists(INPUT_DIR_A):

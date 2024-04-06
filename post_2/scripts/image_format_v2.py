@@ -1,6 +1,7 @@
 import os
+from os import mkdir, path, scandir
+
 from PIL import Image, ImageOps
-from os import scandir, path, mkdir
 
 NEW_SIZE = (224, 224)
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")

@@ -1,30 +1,23 @@
-import torch
-import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from torchvision.datasets import ImageFolder
+from torchvision.transforms import v2
 
 
 # Define the transformation
 def get_transforms(name="train"):
+    transforms_list = []
+
     if name == "train":
-        transform = transforms.Compose(
-            [
-                transforms.RandomPerspective(
-                    p=1
-                ),  # Apply a random perspective transformation
-                transforms.ToTensor(),  # Convert the image to a tensor
-            ]
-        )
+        transforms_list.append(transforms.RandomPerspective(p=1))
 
-    elif name == "test":
-        transform = transforms.Compose(
-            [
-                transforms.ToTensor(),  # Convert the image to a tensor
-            ]
-        )
+    elif name == "test_1":
+        transforms_list.append(v2.Grayscale(3))
 
-    return transform
+    elif name == "test_4":
+        pass
+
+    return transforms.Compose(transforms_list + [transforms.ToTensor()])
 
 
 def get_classes(dataset):
@@ -46,7 +39,7 @@ def get_training_dataset(dir, transform_set="train", batch_size=1, shuffle=True)
     return train_dataset, train_classes
 
 
-def get_testing_dataset(dir, transform_set="test", batch_size=1, shuffle=False):
+def get_testing_dataset(dir, transform_set="test_4", batch_size=1, shuffle=False):
     transform = get_transforms(transform_set)
     dataset = ImageFolder(dir, transform=transform)
     eval_classes = get_classes(dataset)

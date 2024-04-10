@@ -20,14 +20,6 @@ repos:
     hooks:
       - id: isort
         args: [--profile=black]
-  - repo: local
-    hooks:
-      - id: pylint
-        name: pylint
-        entry: python3 -m pylint --exit-zero --output-format=colorized --jobs=1
-        language: system
-        types: [python]
-        verbose: true
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.3.1
     hooks:

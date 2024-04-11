@@ -11,7 +11,6 @@ def evaluate_model(
     verbose=True,
 ):
     results = []
-    filenames = None
 
     eval_dataset = eval_dataloader.dataset
     filenames = [sample[0].split("/")[-1] for sample in eval_dataset.samples]

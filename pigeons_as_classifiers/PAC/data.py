@@ -11,6 +11,9 @@ def get_transforms(name="train"):
     if name == "train":
         transforms_list.append(transforms.RandomPerspective(p=1))
 
+    elif name == "eval":
+        pass
+
     elif name == "test_1":
         transforms_list.append(v2.Grayscale(3))
 
@@ -20,29 +23,34 @@ def get_transforms(name="train"):
     return transforms.Compose(transforms_list + [transforms.ToTensor()])
 
 
-def get_classes(dataset):
+def get_classes(dataset, verbose=False):
     classes = dataset.classes
 
-    print("Class Labels:")
-    for i, label in enumerate(classes):
-        print(f"{i}: {label}")
+    if verbose:
+        print("Class Labels:")
+        for i, label in enumerate(classes):
+            print(f"{i}: {label}")
 
     return classes
 
 
-def get_training_dataset(dir, transform_set="train", batch_size=1, shuffle=True):
+def get_training_dataset(
+    dir, transform_set="train", batch_size=1, shuffle=True, verbose=False
+):
     transform = get_transforms(transform_set)
-    dataset = datasets.ImageFolder(dir, transform=transform)
-    train_classes = get_classes(dataset)
-    train_dataset = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+    train_dataset = datasets.ImageFolder(dir, transform=transform)
+    train_classes = get_classes(train_dataset, verbose=verbose)
+    train_dataset = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
 
     return train_dataset, train_classes
 
 
-def get_testing_dataset(dir, transform_set="test_4", batch_size=1, shuffle=False):
+def get_testing_dataset(
+    dir, transform_set="eval", batch_size=1, shuffle=False, verbose=False
+):
     transform = get_transforms(transform_set)
-    dataset = ImageFolder(dir, transform=transform)
-    eval_classes = get_classes(dataset)
-    eval_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+    eval_dataset = ImageFolder(dir, transform=transform)
+    eval_classes = get_classes(eval_dataset, verbose=verbose)
+    eval_dataloader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=shuffle)
 
-    return eval_dataloader, eval_classes
+    return eval_dataloader, eval_classes, eval_dataset

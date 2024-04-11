@@ -3,7 +3,13 @@ from torch.nn.functional import softmax
 
 
 def evaluate_model(
-    model, eval_dataloader, device, train_classes, eval_classes, eval_dataset=None
+    model,
+    eval_dataloader,
+    device,
+    train_classes,
+    eval_classes,
+    eval_dataset=None,
+    verbose=True,
 ):
     results = []
     filenames = None
@@ -29,9 +35,10 @@ def evaluate_model(
                 "prob": round(softmax_output[0] * 100, 2),
                 "filename": filenames[i] if filenames is not None else "",
             }
-            print(
-                f"Label: {result['label']}, Predicted: {result['predicted']}, Prob: {result['prob']}%, Match: {result['match']}, {result['filename']}"
-            )
+            if verbose:
+                print(
+                    f"Label: {result['label']}, Predicted: {result['predicted']}, Prob: {result['prob']}%, Match: {result['match']}, {result['filename']}"
+                )
             results.append(result)
 
     return results

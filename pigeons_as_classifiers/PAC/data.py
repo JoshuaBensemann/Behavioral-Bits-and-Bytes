@@ -19,25 +19,41 @@ class Downsample(object):
 
 
 # Define the transformation
-def get_transforms(name="train"):
+def get_transforms(name="train", verbose=False):
     transforms_list = []
 
     if name == "train":
+        if verbose:
+            print("Train")
         transforms_list.append(transforms.RandomPerspective(p=1))
 
     elif name == "eval":
-        print("Eval")
+        if verbose:
+            print("Eval")
 
     elif name == "test_1":
-        print("Test 1")
+        if verbose:
+            print("Test 1")
         transforms_list.append(v2.Grayscale(3))
 
     elif name == "test_2":
-        print("Test 2")
+        if verbose:
+            print("Test 2")
         transforms_list.append(Downsample((224, 224)))
 
+    elif name == "test_3_vertical_flip":
+        if verbose:
+            print("Test 3 - Vertical Flip")
+        transforms_list.append(transforms.RandomVerticalFlip(p=1))
+
+    elif name == "test_3_horizontal_flip":
+        if verbose:
+            print("Test 3 - Horizontal Flip")
+        transforms_list.append(transforms.RandomHorizontalFlip(p=1))
+
     elif name == "test_4":
-        print("Test 4")
+        if verbose:
+            print("Test 4")
 
     return transforms.Compose(transforms_list + [transforms.ToTensor()])
 
@@ -56,7 +72,7 @@ def get_classes(dataset, verbose=False):
 def get_training_dataset(
     dir, transform_set="train", batch_size=1, shuffle=True, verbose=False
 ):
-    transform = get_transforms(transform_set)
+    transform = get_transforms(transform_set, verbose=verbose)
     train_dataset = datasets.ImageFolder(dir, transform=transform)
     train_classes = get_classes(train_dataset, verbose=verbose)
     train_dataset = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
@@ -67,7 +83,7 @@ def get_training_dataset(
 def get_testing_dataset(
     dir, transform_set="eval", batch_size=1, shuffle=False, verbose=False
 ):
-    transform = get_transforms(transform_set)
+    transform = get_transforms(transform_set, verbose=verbose)
     eval_dataset = ImageFolder(dir, transform=transform)
     eval_classes = get_classes(eval_dataset, verbose=verbose)
     eval_dataloader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=shuffle)

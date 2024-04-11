@@ -8,14 +8,13 @@ def evaluate_model(
     device,
     train_classes,
     eval_classes,
-    eval_dataset=None,
     verbose=True,
 ):
     results = []
     filenames = None
 
-    if eval_dataset is not None:
-        filenames = [sample[0].split("/")[-1] for sample in eval_dataset.samples]
+    eval_dataset = eval_dataloader.dataset
+    filenames = [sample[0].split("/")[-1] for sample in eval_dataset.samples]
 
     model.eval()  # Set the model to evaluation mode
     with torch.no_grad():  # Turn off gradients for prediction, saves memory and computations
@@ -33,7 +32,7 @@ def evaluate_model(
                     else "Incorrect"
                 ),
                 "prob": round(softmax_output[0] * 100, 2),
-                "filename": filenames[i] if filenames is not None else "",
+                "filename": filenames[i],
             }
             if verbose:
                 print(

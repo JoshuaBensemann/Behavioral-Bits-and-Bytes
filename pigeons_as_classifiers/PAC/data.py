@@ -88,4 +88,4 @@ def get_testing_dataset(
     eval_classes = get_classes(eval_dataset, verbose=verbose)
     eval_dataloader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=shuffle)
 
-    return eval_dataloader, eval_classes, eval_dataset
+    return eval_dataloader, eval_classes

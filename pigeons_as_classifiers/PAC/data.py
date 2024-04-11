@@ -1,7 +1,21 @@
+from PIL import ImageOps
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import v2
+
+
+class Downsample(object):
+    def __init__(self, output_size):
+        assert isinstance(output_size, (int, tuple))
+        self.output_size = output_size
+        self.downsample_size = (112, 112)
+
+    def __call__(self, sample):
+        sample.thumbnail(self.downsample_size)
+        sample = sample.resize(self.output_size)
+
+        return sample
 
 
 # Define the transformation
@@ -12,13 +26,18 @@ def get_transforms(name="train"):
         transforms_list.append(transforms.RandomPerspective(p=1))
 
     elif name == "eval":
-        pass
+        print("Eval")
 
     elif name == "test_1":
+        print("Test 1")
         transforms_list.append(v2.Grayscale(3))
 
+    elif name == "test_2":
+        print("Test 2")
+        transforms_list.append(Downsample((224, 224)))
+
     elif name == "test_4":
-        pass
+        print("Test 4")
 
     return transforms.Compose(transforms_list + [transforms.ToTensor()])
 

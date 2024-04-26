@@ -61,3 +61,27 @@ def summarise_results(results):
         ),
         "results_summary": results_summary,
     }
+
+
+def reformat_summary(summary, test_type):
+    df = summary.get('results_summary', None).copy()
+    if df is not None:
+        df = df.reset_index()
+        df = df.rename(columns={'index': 'class'})
+        df['test_type'] = test_type
+        df['accuracy'] = summary.get('accuracy', None)
+        df['precision'] = summary.get('precision', None)
+        df['recall'] = summary.get('recall', None)
+        df['f1'] = summary.get('f1', None)
+        
+    return df
+
+
+def summarise_summaries(summaries):
+    processed = []
+
+    for key, value in summaries.items():
+        processed.append(reformat_summary(value, key))
+        
+    df = pd.concat(processed, ignore_index=True)
+    return df
